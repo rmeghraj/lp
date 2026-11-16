@@ -1,0 +1,365 @@
+/*
+  One small stylesheet, no framework. Colours are chosen for contrast (checked: text 4.5:1 or better,
+  control borders 3:1 or better). Meaning is never carried by colour alone: every status also has an icon and a word.
+*/
+
+:root {
+  color-scheme: light;
+  --page: #f2f4f7;
+  --surface: #ffffff;
+  --text: #17202a;
+  --muted: #475467;
+  --border: #667085; /* inputs and controls */
+  --hairline: #d0d5dd; /* decorative dividers only */
+  --primary: #1d3b64;
+  --primary-dark: #14294a;
+  --yes-bg: #e3f4ea;
+  --yes-fg: #0a5c32;
+  --no-bg: #fdeaec;
+  --no-fg: #9b1c2c;
+  --warn-bg: #fff3dc;
+  --warn-fg: #6b3d00;
+  --info-bg: #e8eef7;
+  --radius: 0.75rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font: 1rem/1.55 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.page {
+  max-width: 54rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.page-header p {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+}
+
+.page-footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.stack {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+}
+
+h3 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+/* ---- form ---- */
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0.125rem 0 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+input[type='text'],
+textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+[aria-invalid='true'] {
+  border: 2px solid var(--no-fg);
+}
+
+.error {
+  margin: 0.4rem 0 0;
+  color: var(--no-fg);
+  font-weight: 600;
+}
+
+fieldset.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  padding: 0.5rem 1rem 1rem;
+  border: 1px solid var(--hairline);
+  border-radius: 0.5rem;
+}
+
+.examples legend {
+  padding: 0 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.button {
+  padding: 0.55rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  border: 2px solid var(--primary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.button.primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.button.primary:hover {
+  background: var(--primary-dark);
+}
+
+.button.secondary {
+  background: #fff;
+  color: var(--primary);
+}
+
+.button.secondary:hover {
+  background: var(--info-bg);
+}
+
+.button[aria-disabled='true'] {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---- progress and messages ---- */
+
+/* Stays in the page when empty (a screen reader needs the region to exist before its text changes). */
+.progress:not(:empty) {
+  padding: 0.75rem 1rem;
+  background: var(--info-bg);
+  border-radius: 0.5rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.callout {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border-left: 6px solid;
+  border-radius: 0.5rem;
+}
+
+.callout.warn {
+  background: var(--warn-bg);
+  border-color: var(--warn-fg);
+  color: var(--warn-fg);
+}
+
+.callout.danger {
+  margin: 0;
+  background: var(--no-bg);
+  border-color: var(--no-fg);
+  color: var(--no-fg);
+}
+
+/* ---- result ---- */
+
+.result {
+  border-left: 8px solid var(--border);
+}
+
+.result.is-yes {
+  border-left-color: var(--yes-fg);
+}
+
+.result.is-no {
+  border-left-color: var(--no-fg);
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+}
+
+.verdict-icon,
+.check-icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.verdict-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.is-yes .verdict-icon {
+  background: var(--yes-bg);
+  color: var(--yes-fg);
+}
+
+.is-no .verdict-icon {
+  background: var(--no-bg);
+  color: var(--no-fg);
+}
+
+.confidence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+meter {
+  width: min(100%, 14rem);
+  height: 1rem;
+}
+
+meter::-webkit-meter-bar {
+  background: #e4e7ec;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+meter::-webkit-meter-optimum-value,
+meter::-webkit-meter-suboptimum-value,
+meter::-webkit-meter-even-less-good-value {
+  background: var(--primary);
+  border-radius: 999px;
+}
+
+meter::-moz-meter-bar {
+  background: var(--primary);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.facts dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.checks {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.check {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--hairline);
+  border-radius: 0.5rem;
+}
+
+.check-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.check.is-pass .check-icon {
+  background: var(--yes-bg);
+  color: var(--yes-fg);
+}
+
+.check.is-fail .check-icon {
+  background: var(--no-bg);
+  color: var(--no-fg);
+}
+
+.check.is-unknown .check-icon {
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+}
+
+.check.is-not_applicable .check-icon {
+  background: #eaecf0;
+  color: var(--muted);
+}
+
+.check .detail {
+  display: block;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.advisory {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.meta {
+  margin: 1.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}

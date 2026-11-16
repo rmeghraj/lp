@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+.env
+*.tsbuildinfo
+.DS_Store
+
+# Prisma client is generated code: run `npm run db:generate` in backend/
+backend/src/generated/

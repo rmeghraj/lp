@@ -1,0 +1,79 @@
+// Claims Intelligence Engine: assessment slice.
+// Two tables, as briefed (Claim and Assessment). Rationale: DESIGN.md section 4.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// What kind of claim this is. Each type needs a different kind of proof.
+enum ClaimType {
+  EFFICACY // "Reduces wrinkles by 20% in 4 weeks": the type this slice checks with rules
+  PERCEPTION // "92% felt smoother skin"
+  INGREDIENT // "Contains hyaluronic acid"
+  SAFETY // "Suitable for sensitive skin"
+  ENVIRONMENTAL // "Recyclable packaging"
+}
+
+/// Where a claim is in the business workflow (DESIGN.md section 1).
+/// This slice only moves a claim to ASSESSED. The other steps are modelled, not wired yet.
+enum ClaimStatus {
+  PROPOSED
+  SCREENED
+  IN_TESTING
+  EVIDENCE_SUBMITTED
+  ASSESSED
+  APPROVED
+  REJECTED
+}
+
+model Claim {
+  id          String      @id @default(uuid(7))
+  text        String
+  type        ClaimType   @default(EFFICACY)
+  status      ClaimStatus @default(PROPOSED)
+  productName String?
+  /// Pointer to the formula in the R&I system. The formula itself is never stored here or sent to the LLM.
+  formulaRef  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  assessments Assessment[]
+
+  @@index([status])
+}
+
+/// One AI assessment run. An immutable record of what went in, what came out,
+/// and which model and prompt produced it. Append-only: re-assessing adds a row, never edits one.
+model Assessment {
+  id      String @id @default(uuid(7))
+  claimId String
+  claim   Claim  @relation(fields: [claimId], references: [id])
+
+  // Inputs: a snapshot of exactly what the AI saw
+  evidenceTitle String?
+  evidenceText  String
+
+  // Outputs: what the UI shows
+  justified   Boolean
+  confidence  Float
+  reasoning   String
+  needsReview Boolean
+
+  // Explainability: why the system said what it said
+  checks    Json // result of each rule check (pass, fail, unknown, not applicable)
+  extracted Json // facts and quotes the model pulled out of the study
+
+  // Provenance: makes any result reproducible
+  model         String
+  promptVersion String
+  latencyMs     Int
+
+  createdAt DateTime @default(now())
+
+  @@index([claimId, createdAt])
+}
